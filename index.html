@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Angular Widgets</title>
+  </head>
+
+  <body ng-app="widgets">
+
+    <div ng-controller="RestaurantCtrl">
+
+      <form>
+        <label for="name">Name:</label>
+        <input type="text" name="name" ng-model="name">
+        <br>
+
+        <label for="foodType">Type of Food:</label>
+        <input type="text" name="foodType" ng-model="foodType">
+        <br>
+
+        <label for="foodType">Restaurant Picture:</label>
+        <input type="text" name="imageURL" ng-model="imageURL">
+        <br>
+
+        <input type="submit" value="Create Restaurant" ng-click="createRestaurant(name, foodType, imageURL)">
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th class="pointer"><a ng-click="setSort('name')">Name</a></th>
+            <th class="pointer"><a ng-click="setSort('foodType')">Type of Food</a></th>
+            <th>Image</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr ng-repeat="restaurant in restaurants | orderBy: sort | filter:search">
+            <td>{{ restaurant.name }}</td>
+            <td>{{ restaurant.foodType }}</td>
+            <td><img width='64px' ng-src="{{restaurant.imageURL}}"></td>
+            <td><button ng-click="remove(restaurant)">delete!</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class='search'>
+        <h4>Search Restaurants</h4>
+        <input type="text" ng-model="search">
+      </div>
+
+    </div>
+
+  </body>
+
+</html>
