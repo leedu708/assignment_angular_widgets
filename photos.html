@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="photos.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <title>Photo Widget</title>
+  </head>
+
+  <body ng-app="widgets">
+
+    <div class="container" ng-controller="PhotosCtrl">
+
+      <div class="row">
+        <div class="row search-wrapper">
+          <h2 class="text-center">Photos</h2>
+          <div class="col-md-12 options-wrapper">
+
+            <!-- search by filter -->
+            <label for="filter-list">Filters:</label>
+            <select name="filter-list" ng-model="filterSearch" ng-change="resetPage()">
+              <option ng-repeat="filter in allFilters | orderBy: filter" value="{{filter}}">{{filter}}</option>
+            </select>
+
+            <!-- search by tag -->
+            <label for="tag-list">Tags:</label>
+            <select name="tag-list" ng-model="tagSearch" ng-change="resetPage()" multiple>
+              <option ng-repeat="tag in allTags | orderBy: tag" value="{{tag}}">{{tag}}</option>
+            </select>
+
+            <button class="btn btn-success" ng-click="resetSearch()">Reset</button>
+
+            <!-- navigation -->
+            <div class="pull-right">
+              <h4>
+                <ng-pluralize count="filteredPhotos.length" 
+                  when="{'0': 'No results found...',
+                  '1': '1 result found...',
+                  'other': '{} results found...'}">
+              </h4>
+
+              <ul class="list-inline">
+                <li><a class="pointer" ng-click="pageDown()"> << </a></li>
+                <li><p>Page: {{ page.number }}</p></li>
+                <li><a class="pointer" ng-click="pageUp()"> >> </a></li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-3" ng-repeat="photo in filteredPhotos = (photos | filter: customFilter | filter: {filter: filterSearch, user: userFilter} ) | limitTo: page.perPage : page.offset()">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3 class="text-center">
+                <a href="https://instagram.com/{{photo.user.username}}/">{{ photo.user.username }}</a>
+              </h3>
+
+              <a href="{{ photo.link }}">
+                <img class="img-responsive" ng-src="{{ photo.images.standard_resolution.url }}">
+              </a>
+
+              <p class="pull-left">
+                <small>{{ photo.created_time | date:'short' }}
+                <br>
+                Comments: {{ photo.comments.count | number }}</small>
+              </p>
+
+              <p class="pull-right">
+                Filter: {{ photo.filter }}
+                <br>
+                Likes: {{ photo.likes.count | number }}
+              </p>
+
+              <p>
+                {{ photo.caption.text }}
+              </p>
+
+              <ul class="list-inline">
+                <li ng-repeat="tags in photo.tags"><small>#{{ tag }}</small></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <h2 class="text-center">Users</h2>
+
+        <div class="col-sm-2" ng-repeat="user in users">
+          <div class="panel panel-default pointer" ng-click="setUserFilter(user)">
+
+            <div class="panel-heading text-center">
+              <p><small class="text-primary">
+                {{ user.full_name }}
+                <br>
+                @{{ user.username }}
+              </small></p>
+            </div>
+
+            <div class="panel-body">
+              <a>
+                <img class="img-responsive" ng-src="{{ user.profile_picture }}">
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+
+</html>
