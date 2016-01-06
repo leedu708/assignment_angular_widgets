@@ -38,7 +38,7 @@ widgets.controller('PhotosCtrl', ['$scope', function($scope){
   // page variables; offset to determine starting index based on page number
   $scope.page = {
     number: 1,
-    perPage: 4,
+    perPage: 3,
     offset: function() { return (this.number - 1) * this.perPage }
   };
 
@@ -99,6 +99,7 @@ widgets.controller('PhotosCtrl', ['$scope', function($scope){
     $scope.filterSearch = "";
     $scope.tagSearch = "";
     $scope.userFilter = {};
+    $scope.page.number = 1;
   };
 
   // Users
